@@ -1,34 +1,41 @@
-// summarizeText.js
+import OpenAI from 'openai';
 
-const { Configuration, OpenAIApi } = require("openai");
-
-// Initialize OpenAI
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // Set securely!
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY
 });
-const openai = new OpenAIApi(configuration);
 
-async function summarizeText(rawText) {
-  const prompt = `
-You're a helpful medical assistant for patients.
-1. Read the following lab results or medical report.
-2. Summarize the findings in simple terms.
-3. Suggest 3-5 questions the patient might ask their doctor.
+/**
+ * Summarizes medical text using AI
+ * @param {string} text - Medical text to summarize
+ * @returns {Promise<string>} - Plain English summary
+ */
+export async function summarizeText(text) {  // <-- Named export
+  try {
+    // Truncate very long texts to avoid token limits
+    const truncatedText = text.length > 12000
+      ? text.substring(0, 12000) + "... [truncated]"
+      : text;
 
-Input:
-"""${rawText}"""
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a medical translator. Explain lab results in simple terms without diagnosis. Highlight abnormal values. Never mention patient names or IDs."
+        },
+        {
+          role: "user",
+          content: truncatedText
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 1000
+    });
 
-Output:
-`;
-
-  const response = await openai.createChatCompletion({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.5,
-  });
-
-  return response.data.choices[0].message.content;
+    return response.choices[0]?.message?.content || "No summary available";
+  } catch (error) {
+    console.error("AI Summarization Error:", error);
+    throw new Error("Failed to generate summary");
+  }
 }
-
-module.exports = summarizeText;
-

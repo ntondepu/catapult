@@ -1,33 +1,15 @@
-// src/parsePdf.js
+export async function parsePdf(file) {
+  try {
+    // Dynamic import handles module compatibility
+    const pdfjsLib = await import('pdfjs-dist');
+    const { getDocument } = pdfjsLib.default || pdfjsLib;
 
-const pdfjsLib = require('pdfjs-dist');
+    const worker = await import('pdfjs-dist/build/pdf.worker.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = worker;
 
-function parsePdf(file) {
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-        const pdfData = new Uint8Array(e.target.result);
-
-        pdfjsLib.getDocument(pdfData).promise.then(function(pdf) {
-            let text = '';
-            const numPages = pdf.numPages;
-
-            // Loop through all pages to extract text
-            for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-                pdf.getPage(pageNumber).then(function(page) {
-                    page.getTextContent().then(function(textContent) {
-                        text += textContent.items.map(item => item.str).join(' ') + '\n';
-                    });
-                });
-            }
-
-            return text;
-        }).catch(function(error) {
-            console.error(error);
-            alert('Error parsing PDF.');
-        });
-    };
-
-    reader.readAsArrayBuffer(file);
+    // Rest of your implementation...
+  } catch (error) {
+    console.error('PDF Processing Error:', error);
+    throw new Error('Failed to parse PDF document');
+  }
 }
-

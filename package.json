@@ -1,1 +1,46 @@
-
+{
+  "name": "catapult",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MedAI Navigator is a secure, AI-driven health assistant that helps users understand their medical reports, symptoms, and prescriptions in plain English — no jargon, no panic. It also suggests personalized follow-up questions to ask their doctor and provides a risk flag summary with easy color-coded visuals.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --experimental-vm-modules src/index.js",
+    "dev": "vite",
+    "build": "vite build",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ntondepu/catapult.git"
+  },
+  "keywords": [
+    "medical",
+    "AI",
+    "health",
+    "OCR",
+    "HIPAA"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ntondepu/catapult/issues"
+  },
+  "homepage": "https://github.com/ntondepu/catapult#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "openai": "^4.93.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.1.91",
+    "tesseract.js": "^4.1.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.1.1",
+    "vite": "^6.2.6"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
