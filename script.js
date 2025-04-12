@@ -1,87 +1,92 @@
-// Handle file input and process the file
-document.getElementById("fileInput").addEventListener("change", async function (event) {
-    const file = event.target.files[0];
-    if (!file) return;
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0';
 
-    const extractedText = await extractTextFromFile(file); // OCR/PDF text extraction
-    displayExtractedText(extractedText);
+// Load the summarization and text-generation pipelines
+const summarizer = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+const questionGenerator = await pipeline('text-generation', 'Xenova/gpt2');
 
-    const summary = await generateSummary(extractedText);
-    displaySummary(summary);
+const fileInput = document.getElementById('fileInput');
+const processButton = document.getElementById('processButton');
+const imagePreview = document.getElementById('imagePreview');
+const extractedTextElem = document.getElementById('extractedText');
+const summaryElem = document.getElementById('summary');
+const questionsList = document.getElementById('questionsList');
 
-    const questions = await generateFollowUpQuestions(extractedText);
-    displayFollowUpQuestions(questions);
+let extractedText = '';
+
+fileInput.addEventListener('change', handleFileSelect);
+processButton.addEventListener('click', async () => {
+  if (!extractedText) {
+    alert('Please upload and extract text first.');
+    return;
+  }
+
+  // Run summarization
+  summaryElem.textContent = 'Generating summary...';
+  const summaryResult = await summarizer(extractedText, {
+    min_length: 20,
+    max_length: 100,
+  });
+  summaryElem.textContent = summaryResult[0].summary_text;
+
+  // Generate follow-up questions
+  questionsList.innerHTML = '<li>Generating questions...</li>';
+  const questionResult = await questionGenerator(
+    `Suggest 3 follow-up questions a patient might ask based on this summary: ${summaryResult[0].summary_text}`,
+    { max_length: 100 }
+  );
+
+  const questions = questionResult[0].generated_text
+    .split(/[0-9]\.|\n/)
+    .map(q => q.trim())
+    .filter(q => q.length > 10);
+
+  questionsList.innerHTML = '';
+  questions.forEach(q => {
+    const li = document.createElement('li');
+    li.textContent = q;
+    questionsList.appendChild(li);
+  });
 });
 
-// Extract text from file (OCR for images, PDF parsing for PDFs)
-async function extractTextFromFile(file) {
-    if (file.type === "application/pdf") {
-        // Handle PDF files
-        const pdf = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
-        const text = await extractTextFromPDF(pdf);
-        return text;
-    } else if (file.type.startsWith("image")) {
-        // Handle image files with OCR
-        return await processImageWithOCR(file);
-    }
-}
+async function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
 
-// Generate a summary using Hugging Face's summarization model
-async function generateSummary(text) {
-    const model = await hf.load('facebook/bart-large-cnn');
-    const summary = await model.summarize(text);
-    return summary;
-}
+  imagePreview.innerHTML = '';
+  extractedTextElem.textContent = 'Extracting text...';
+  summaryElem.textContent = 'No summary yet.';
+  questionsList.innerHTML = '<li>No questions generated yet.</li>';
 
-// Generate follow-up questions based on extracted text
-async function generateFollowUpQuestions(text) {
-    const model = await hf.load('facebook/bart-large-cnn'); // Replace with the model for follow-ups if needed
-    const questions = await model.generateQuestions(text); // Modify this as needed based on Hugging Face capabilities
-    return questions;
-}
+  const reader = new FileReader();
 
-// Display extracted text on the page
-function displayExtractedText(text) {
-    document.getElementById("extractedText").innerText = text;
-}
-
-// Display summary on the page
-function displaySummary(summary) {
-    document.getElementById("summary").innerText = summary;
-}
-
-// Display follow-up questions on the page
-function displayFollowUpQuestions(questions) {
-    const questionsList = document.getElementById("followUpQuestions");
-    questionsList.innerHTML = "";
-    questions.forEach(question => {
-        const li = document.createElement("li");
-        li.textContent = question;
-        questionsList.appendChild(li);
-    });
-}
-
-// Process image with OCR (using Tesseract.js)
-async function processImageWithOCR(imageFile) {
-    const { createWorker } = Tesseract;
-    const worker = createWorker();
-    await worker.load();
-    await worker.loadLanguage("eng");
-    await worker.initialize("eng");
-    const { data: { text } } = await worker.recognize(imageFile);
-    await worker.terminate();
-    return text;
-}
-
-// Extract text from PDF using pdf.js
-async function extractTextFromPDF(pdf) {
-    let textContent = "";
-    for (let i = 1; i <= pdf.numPages; i++) {
+  if (file.type === 'application/pdf') {
+    reader.onload = async function () {
+      const typedarray = new Uint8Array(this.result);
+      const pdf = await pdfjsLib.getDocument(typedarray).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const content = await page.getTextContent();
-        content.items.forEach(item => {
-            textContent += item.str + " ";
-        });
-    }
-    return textContent;
+        text += content.items.map(item => item.str).join(' ') + '\n';
+      }
+      extractedText = text;
+      extractedTextElem.textContent = text.trim();
+    };
+    reader.readAsArrayBuffer(file);
+  } else if (file.type.startsWith('image/')) {
+    const url = URL.createObjectURL(file);
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'Uploaded image preview';
+    img.style.maxWidth = '100%';
+    imagePreview.appendChild(img);
+
+    const result = await Tesseract.recognize(url, 'eng', {
+      logger: m => console.log(m),
+    });
+    extractedText = result.data.text;
+    extractedTextElem.textContent = result.data.text.trim();
+  } else {
+    alert('Unsupported file type. Please upload a PDF or image.');
+  }
 }

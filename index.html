@@ -1,99 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>MedAI Navigator</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Added some basic styling for the new elements */
-        .upload-area {
-            margin: 20px 0;
-            padding: 20px;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            text-align: center;
-        }
-        #processButton {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #processButton:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        .text-output {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-        }
-        .error {
-            color: #d32f2f;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedAI Navigator</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="container">
+  <div class="container">
     <header>
-        <h1>MedAI Navigator</h1>
-        <p>Upload your medical report for a plain-English explanation</p>
+      <h1>MedAI Navigator</h1>
+      <p>Upload your medical report for a plain-English explanation</p>
     </header>
 
     <main>
-        <div class="upload-area">
-            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
-            <label for="fileInput">Choose a PDF or Image</label>
-            <button id="processButton" disabled>Process File</button>
-            <p>Supports: PDF, JPG, PNG files</p>
-        </div>
+      <!-- Upload Area -->
+      <div class="upload-area">
+        <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" />
+        <label for="fileInput">Choose a PDF or Image</label>
+        <p>Supports: PDF, JPG, PNG files</p>
+        <button id="processButton">Process File</button>
+      </div>
 
-        <div id="results" class="results"></div>
+      <!-- Display Image -->
+      <div id="imagePreview" class="image-preview"></div>
+
+      <!-- Extracted Text -->
+      <div id="results" class="results">
+        <h2>Extracted Text:</h2>
+        <p id="extractedText">No text extracted yet.</p>
+      </div>
+
+      <!-- Summary Section -->
+      <div class="summary-section">
+        <h2>Summary:</h2>
+        <p id="summary">No summary yet.</p>
+      </div>
+
+      <!-- Follow-up Questions -->
+      <div class="follow-up-section">
+        <h2>Follow-up Questions:</h2>
+        <ul id="questionsList">
+          <li>No questions generated yet.</li>
+        </ul>
+      </div>
     </main>
 
     <footer>
-        <p>Note: This tool does not store your medical data. It is not a substitute for professional medical advice.</p>
+      <p>
+        Note: This tool does not store your medical data. It is not a substitute
+        for professional medical advice.
+      </p>
     </footer>
-</div>
+  </div>
 
-<!-- PDF.js from CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script type="module" src="script.js"></script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
-=======
-    <title>OCR Application</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Image Text Extraction</h1>
-        <input type="file" id="fileInput" accept="image/*">
-        <button id="processButton">Process Image</button>
-        <div id="results">
-            <h2>Extracted Text:</h2>
-            <p id="extractedText">No text extracted yet.</p>
-        </div>
-        <div id="summary">
-            <h2>Summary:</h2>
-            <p id="summaryText">No summary yet.</p>
-        </div>
-        <div id="questions">
-            <h2>Follow-Up Questions:</h2>
-            <p id="followUpQuestions">No questions generated yet.</p>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/qna"></script>
-    <script src="script.js"></script>
-</body>
-</html>
->>>>>>> 54b59fd (Saved local changes to index.html)
