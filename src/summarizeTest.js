@@ -1,5 +1,3 @@
-// summarizeText.js
-
 const { Configuration, OpenAIApi } = require("openai");
 
 // Initialize OpenAI
@@ -29,6 +27,4 @@ Output:
 
   return response.data.choices[0].message.content;
 }
-
-module.exports = summarizeText;
 
