@@ -19,6 +19,11 @@ document.getElementById('processButton').addEventListener('click', async () => {
     `;
     return;
   }
+// In your script.js - Make sure you have this event listener:
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  document.getElementById('processButton').disabled = !file; // Enable if file exists
+});
 
   try {
     // Validate file
