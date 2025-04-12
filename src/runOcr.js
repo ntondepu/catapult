@@ -1,21 +1,19 @@
 import Tesseract from 'tesseract.js';
 
 export async function runOcr(file) {
-    return new Promise((resolve, reject) => {
-        // Create a URL for the file (from the remote version)
-        const url = URL.createObjectURL(file);
+  try {
+    const url = URL.createObjectURL(file);
 
-        // Use Tesseract to recognize text
-        Tesseract.recognize(
-            url, // Using the URL for the file
-            'eng', // Language for OCR (English)
-            {
-                logger: m => console.log(m) // Optional: Logs progress in console
-            }
-        ).then(({ data: { text } }) => {
-            resolve(text);
-        }).catch(err => {
-            reject(err);
-        });
-    });
+    const { data: { text } } = await Tesseract.recognize(
+      url,
+      'eng',
+      { logger: m => console.log(m) }
+    );
+
+    URL.revokeObjectURL(url);
+    return text;
+  } catch (error) {
+    console.error('OCR Processing Error:', error);
+    throw new Error('Failed to process image file');
+  }
 }

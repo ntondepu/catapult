@@ -1,13 +1,24 @@
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+
+// Set worker path
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/legacy/build/pdf.worker.mjs',
+  import.meta.url
+).toString();
+
 export async function parsePdf(file) {
   try {
-    // Dynamic import handles module compatibility
-    const pdfjsLib = await import('pdfjs-dist');
-    const { getDocument } = pdfjsLib.default || pdfjsLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+    let text = '';
 
-    const worker = await import('pdfjs-dist/build/pdf.worker.mjs');
-    pdfjsLib.GlobalWorkerOptions.workerSrc = worker;
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(item => item.str).join(' ') + '\n';
+    }
 
-    // Rest of your implementation...
+    return text;
   } catch (error) {
     console.error('PDF Processing Error:', error);
     throw new Error('Failed to parse PDF document');

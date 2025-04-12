@@ -1,14 +1,27 @@
-// index.js
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { parsePdf } from './parsePdf.js';
 import { runOcr } from './runOcr.js';
 import { summarizeText } from './summarizeText.js';
-import { flagRisks } from './riskFlagger.js';
+import { analyzeReport as flagRisks } from './riskFlagger.js';
 import { generatePdf } from './generatePdf.js';
 import { webcrypto } from 'node:crypto';
+
+// Set up worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/legacy/build/pdf.worker.mjs',
+  import.meta.url
+).toString();
+
+// Polyfills
 globalThis.crypto = webcrypto;
-import { DOMMatrix } from 'canvas';
-global.DOMMatrix = DOMMatrix;
-import { getDocument } from 'pdfjs-dist';
+
+// Only include if you actually need DOMMatrix
+try {
+  const { DOMMatrix } = await import('canvas');
+  global.DOMMatrix = DOMMatrix;
+} catch {
+  console.warn('Canvas not available - DOMMatrix polyfill skipped');
+}
 
 export async function processFile(file) {
   let text = '';
@@ -25,4 +38,3 @@ export async function processFile(file) {
 
   return { summary, flagged, pdfBlob };
 }
-

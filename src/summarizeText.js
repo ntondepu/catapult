@@ -1,8 +1,12 @@
 import OpenAI from 'openai';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_KEY
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 /**
@@ -10,9 +14,9 @@ const openai = new OpenAI({
  * @param {string} text - Medical text to summarize
  * @returns {Promise<string>} - Plain English summary
  */
-export async function summarizeText(text) {  // <-- Named export
+export async function summarizeText(text) {
   try {
-    // Truncate very long texts to avoid token limits
+    // Truncate very long texts
     const truncatedText = text.length > 12000
       ? text.substring(0, 12000) + "... [truncated]"
       : text;
