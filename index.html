@@ -4,49 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedAI Navigator</title>
+    <link rel="stylesheet" href="style.css">
     <style>
+        /* Added some basic styling for the new elements */
+        .upload-area {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #processButton {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
         #processButton:disabled {
-            opacity: 0.5;
+            background-color: #cccccc;
             cursor: not-allowed;
         }
         .text-output {
-            white-space: pre-wrap;
             margin-top: 20px;
             padding: 15px;
-            border: 1px solid #eee;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .error {
+            color: #d32f2f;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
-    <button id="processButton" disabled>Process File</button>
-    <div id="results"></div>
+    <header>
+        <h1>MedAI Navigator</h1>
+        <p>Upload your medical report for a plain-English explanation</p>
+    </header>
+
+    <main>
+        <div class="upload-area">
+            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
+            <label for="fileInput">Choose a PDF or Image</label>
+            <button id="processButton" disabled>Process File</button>
+            <p>Supports: PDF, JPG, PNG files</p>
+        </div>
+
+        <div id="results" class="results"></div>
+    </main>
+
+    <footer>
+        <p>Note: This tool does not store your medical data. It is not a substitute for professional medical advice.</p>
+    </footer>
 </div>
 
-<script>
-    // SIMPLIFIED TEST VERSION - Put this in script.js if it works
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-        document.getElementById('processButton').disabled = !e.target.files[0];
-    });
-
-    document.getElementById('processButton').addEventListener('click', async () => {
-        const file = document.getElementById('fileInput').files[0];
-        if (!file) return;
-
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = "Processing...";
-
-        // Simulate processing delay
-        setTimeout(() => {
-            resultsDiv.innerHTML = `
-                <h3>Test Output (${file.name})</h3>
-                <div class="text-output">
-                    This would show extracted text in real implementation
-                </div>
-            `;
-        }, 1000);
-    });
-</script>
+<!-- PDF.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
