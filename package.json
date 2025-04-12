@@ -1,1 +1,24 @@
-
+{
+  "name": "catapult",
+  "version": "1.0.0",
+  "description": "MedAI Navigator is a secure, AI-driven health assistant that helps users understand their medical reports, symptoms, and prescriptions in plain English — no jargon, no panic. It also suggests personalized follow-up questions to ask their doctor and provides a risk flag summary with easy color-coded visuals.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ntondepu/catapult.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ntondepu/catapult/issues"
+  },
+  "homepage": "https://github.com/ntondepu/catapult#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "openai": "^4.93.0"
+  }
+}
