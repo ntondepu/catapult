@@ -1,46 +1,41 @@
-const { Configuration, OpenAIApi } = require("openai");
-require("dotenv").config(); // Ensure you have the .env file for your API key
+import OpenAI from 'openai';
 
-// Initialize OpenAI with your API key
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // Secure your API key!
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY
 });
-const openai = new OpenAIApi(configuration);
 
 /**
- * Summarizes medical text into plain language and suggests questions.
- * @param {string} rawText - Raw text from PDF/OCR.
- * @returns {Promise<string>} - Summary and follow-up questions.
+ * Summarizes medical text using AI
+ * @param {string} text - Medical text to summarize
+ * @returns {Promise<string>} - Plain English summary
  */
-async function summarizeText(rawText) {
-  const prompt = `
-You are a helpful medical assistant for patients. 
-1. Read the following lab results or medical report. 
-2. Summarize the findings in simple, non-technical language. 
-3. Suggest 3–5 relevant questions the patient should ask their doctor.
-
-Medical Text:
-"""
-${rawText}
-"""
-
-Plain-English Summary:
-`;
-
+export async function summarizeText(text) {  // <-- Named export
   try {
-    const response = await openai.createChatCompletion({
+    // Truncate very long texts to avoid token limits
+    const truncatedText = text.length > 12000
+      ? text.substring(0, 12000) + "... [truncated]"
+      : text;
+
+    const response = await openai.chat.completions.create({
       model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.5,
-      max_tokens: 700,
+      messages: [
+        {
+          role: "system",
+          content: "You are a medical translator. Explain lab results in simple terms without diagnosis. Highlight abnormal values. Never mention patient names or IDs."
+        },
+        {
+          role: "user",
+          content: truncatedText
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 1000
     });
 
-    const summary = response.data.choices[0].message.content;
-    return summary;
-  } catch (err) {
-    console.error("Error summarizing text:", err);
-    return "Sorry, we couldn't summarize the text. Please try again later.";
+    return response.choices[0]?.message?.content || "No summary available";
+  } catch (error) {
+    console.error("AI Summarization Error:", error);
+    throw new Error("Failed to generate summary");
   }
 }
-
-module.exports = summarizeText;
