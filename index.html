@@ -5,6 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedAI Navigator</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Added some basic styling for the new elements */
+        .upload-area {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #processButton {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #processButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .text-output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .error {
+            color: #d32f2f;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -17,6 +50,7 @@
         <div class="upload-area">
             <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
             <label for="fileInput">Choose a PDF or Image</label>
+            <button id="processButton" disabled>Process File</button>
             <p>Supports: PDF, JPG, PNG files</p>
         </div>
 
