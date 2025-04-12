@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>MedAI Navigator</title>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -67,3 +68,32 @@
 <script type="module" src="script.js"></script>
 </body>
 </html>
+=======
+    <title>OCR Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Text Extraction</h1>
+        <input type="file" id="fileInput" accept="image/*">
+        <button id="processButton">Process Image</button>
+        <div id="results">
+            <h2>Extracted Text:</h2>
+            <p id="extractedText">No text extracted yet.</p>
+        </div>
+        <div id="summary">
+            <h2>Summary:</h2>
+            <p id="summaryText">No summary yet.</p>
+        </div>
+        <div id="questions">
+            <h2>Follow-Up Questions:</h2>
+            <p id="followUpQuestions">No questions generated yet.</p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/qna"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+>>>>>>> 54b59fd (Saved local changes to index.html)
