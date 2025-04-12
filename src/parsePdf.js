@@ -1,10 +1,4 @@
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
-
-// Set worker path
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/legacy/build/pdf.worker.mjs',
-  import.meta.url
-).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
 export async function parsePdf(file) {
   try {
@@ -21,6 +15,6 @@ export async function parsePdf(file) {
     return text;
   } catch (error) {
     console.error('PDF Processing Error:', error);
-    throw new Error('Failed to parse PDF document');
+    throw new Error('Failed to parse PDF. Please ensure it contains selectable text.');
   }
 }
