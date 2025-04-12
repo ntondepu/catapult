@@ -13,8 +13,12 @@ header {
     padding: 20px;
 }
 
-section {
+main {
     text-align: center;
+    margin: 20px;
+}
+
+section {
     margin: 20px;
 }
 
@@ -37,3 +41,24 @@ footer {
     color: white;
 }
 
+/* Styling for result sections */
+#results {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#results h2 {
+    color: #333;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+#results p, #results div, #results ul {
+    color: #555;
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
