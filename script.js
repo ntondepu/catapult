@@ -1,74 +1,87 @@
-import { parsePdf } from './src/parsePdf.js';
-import { runOcr } from './src/runOcr.js';
-import { stripPII, validateFile } from './src/utils.js';
+// Handle file input and process the file
+document.getElementById("fileInput").addEventListener("change", async function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-// Store the selected file globally
-let selectedFile = null;
+    const extractedText = await extractTextFromFile(file); // OCR/PDF text extraction
+    displayExtractedText(extractedText);
 
-// File selection handler
-document.getElementById('fileInput').addEventListener('change', (e) => {
-  selectedFile = e.target.files[0];
-  document.getElementById('processButton').disabled = !selectedFile;
+    const summary = await generateSummary(extractedText);
+    displaySummary(summary);
+
+    const questions = await generateFollowUpQuestions(extractedText);
+    displayFollowUpQuestions(questions);
 });
 
-// Process button handler
-document.getElementById('processButton').addEventListener('click', async () => {
-  if (!selectedFile) {
-    document.getElementById('results').innerHTML = `
-      <p class="error">Please select a file first!</p>
-    `;
-    return;
-  }
-// In your script.js - Make sure you have this event listener:
-document.getElementById('fileInput').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  document.getElementById('processButton').disabled = !file; // Enable if file exists
-});
-
-  try {
-    // Validate file
-    validateFile(selectedFile);
-
-    // Show loading state
-    document.getElementById('results').innerHTML = '<p>Processing your file...</p>';
-    document.getElementById('processButton').disabled = true;
-    document.getElementById('fileInput').disabled = true;
-
-    // Process file based on type
-    let extractedText;
-    if (selectedFile.type === 'application/pdf') {
-      extractedText = await parsePdf(selectedFile);
-    } else {
-      extractedText = await runOcr(selectedFile);
+// Extract text from file (OCR for images, PDF parsing for PDFs)
+async function extractTextFromFile(file) {
+    if (file.type === "application/pdf") {
+        // Handle PDF files
+        const pdf = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
+        const text = await extractTextFromPDF(pdf);
+        return text;
+    } else if (file.type.startsWith("image")) {
+        // Handle image files with OCR
+        return await processImageWithOCR(file);
     }
+}
 
-    // Clean the text
-    const cleanText = stripPII(extractedText);
+// Generate a summary using Hugging Face's summarization model
+async function generateSummary(text) {
+    const model = await hf.load('facebook/bart-large-cnn');
+    const summary = await model.summarize(text);
+    return summary;
+}
 
-    // Display results
-    document.getElementById('results').innerHTML = `
-      <h3>Extracted Text:</h3>
-      <div class="text-output">${cleanText}</div>
-      <button id="clearResults">Clear Results</button>
-    `;
+// Generate follow-up questions based on extracted text
+async function generateFollowUpQuestions(text) {
+    const model = await hf.load('facebook/bart-large-cnn'); // Replace with the model for follow-ups if needed
+    const questions = await model.generateQuestions(text); // Modify this as needed based on Hugging Face capabilities
+    return questions;
+}
 
-    // Add clear results button functionality
-    document.getElementById('clearResults').addEventListener('click', () => {
-      document.getElementById('results').innerHTML = '';
-      document.getElementById('fileInput').value = '';
-      selectedFile = null;
-      document.getElementById('processButton').disabled = true;
-      document.getElementById('fileInput').disabled = false;
+// Display extracted text on the page
+function displayExtractedText(text) {
+    document.getElementById("extractedText").innerText = text;
+}
+
+// Display summary on the page
+function displaySummary(summary) {
+    document.getElementById("summary").innerText = summary;
+}
+
+// Display follow-up questions on the page
+function displayFollowUpQuestions(questions) {
+    const questionsList = document.getElementById("followUpQuestions");
+    questionsList.innerHTML = "";
+    questions.forEach(question => {
+        const li = document.createElement("li");
+        li.textContent = question;
+        questionsList.appendChild(li);
     });
+}
 
-  } catch (error) {
-    document.getElementById('results').innerHTML = `
-      <p class="error">Error: ${error.message}</p>
-    `;
-    console.error('Processing error:', error);
-    document.getElementById('processButton').disabled = false;
-    document.getElementById('fileInput').disabled = false;
-  } finally {
-    document.getElementById('processButton').disabled = false;
-  }
-});
+// Process image with OCR (using Tesseract.js)
+async function processImageWithOCR(imageFile) {
+    const { createWorker } = Tesseract;
+    const worker = createWorker();
+    await worker.load();
+    await worker.loadLanguage("eng");
+    await worker.initialize("eng");
+    const { data: { text } } = await worker.recognize(imageFile);
+    await worker.terminate();
+    return text;
+}
+
+// Extract text from PDF using pdf.js
+async function extractTextFromPDF(pdf) {
+    let textContent = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        content.items.forEach(item => {
+            textContent += item.str + " ";
+        });
+    }
+    return textContent;
+}
