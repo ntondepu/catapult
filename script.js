@@ -1,3 +1,7 @@
+// =============================
+// script.js — Hugging Face + Tesseract + PDF Extraction + UI
+// =============================
+
 document.getElementById("processButton").addEventListener("click", async () => {
     const fileInput = document.getElementById("fileInput");
     const file = fileInput.files[0];
@@ -58,20 +62,25 @@ document.getElementById("processButton").addEventListener("click", async () => {
     document.getElementById("extractedText").textContent = text;
   
     // Summarize using Hugging Face
-    document.getElementById("summary").textContent = "Summarizing...";
-    const summary = await generateSummary_HF(text);
-    document.getElementById("summary").textContent = summary;
+    const summaryEl = document.getElementById("summary");
+    if (summaryEl) {
+      summaryEl.textContent = "Summarizing...";
+      const summary = await generateSummary_HF(text);
+      summaryEl.textContent = summary;
+    }
   
     // Generate follow-up questions
-    document.getElementById("questionsList").innerHTML = "<li>Generating questions...</li>";
-    const questions = await generateFollowUpQuestions_HF(text);
-    const list = document.getElementById("questionsList");
-    list.innerHTML = "";
-    questions.forEach(q => {
-      const li = document.createElement("li");
-      li.textContent = q;
-      list.appendChild(li);
-    });
+    const questionsList = document.getElementById("questionsList");
+    if (questionsList) {
+      questionsList.innerHTML = "<li>Generating questions...</li>";
+      const questions = await generateFollowUpQuestions_HF(text);
+      questionsList.innerHTML = "";
+      questions.forEach(q => {
+        const li = document.createElement("li");
+        li.textContent = q;
+        questionsList.appendChild(li);
+      });
+    }
   }
   
   // ============================
@@ -130,4 +139,19 @@ document.getElementById("processButton").addEventListener("click", async () => {
     const sentences = text.match(/[^.!?\n]+[.!?]/g) || [];
     return sentences.slice(0, 2); // First 2 sentences
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
