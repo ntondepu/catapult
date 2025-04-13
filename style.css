@@ -1,118 +1,168 @@
+:root {
+  --primary: #F08080;
+  --primary-light: #FF9980;
+  --secondary: #7FB3D5;
+  --success: #88C9A1;
+  --warning: #FFA726;
+  --danger: #E57373;
+  --light: #F8F9FA;
+  --dark: #333333;
+  --gray: #95A5A6;
+  --container-bg: #F0F3F4;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --transition: all 0.3s ease;
+  --terracotta-border: rgba(240, 128, 128, 0.4);
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
-  color: #333;
-  max-width: 800px;
-  margin: 0 auto;
+  color: var(--dark);
+  background-color: #D4E6F1;
   padding: 20px;
+  min-height: 100vh;
 }
 
 .container {
-  background: #f9f9f9;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--container-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
+  border: 1px solid var(--terracotta-border);
 }
 
 header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--terracotta-border);
 }
 
-<<<<<<< HEAD
-main {
-    text-align: center;
-    margin: 20px;
-=======
 h1 {
-  color: #2c3e50;
+  color: var(--primary);
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 
-.upload-area {
-  text-align: center;
-  padding: 30px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
+h2 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--secondary);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.upload-area, .results, .summary-section, .follow-up-section, .symptom-checker-section {
   background: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--terracotta-border);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  text-align: center;
 }
 
-input[type="file"] {
+#fileInput {
   display: none;
 }
 
 label[for="fileInput"] {
-  display: inline-block;
-  padding: 10px 20px;
-  background: #3498db;
+  background-color: var(--secondary);
   color: white;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background 0.3s;
+  display: inline-block;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: var(--transition);
 }
 
 label[for="fileInput"]:hover {
-  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.results {
-  background: white;
-  padding: 20px;
-  border-radius: 5px;
-  margin-top: 20px;
-}
-
-.error {
-  color: #e74c3c;
->>>>>>> 2891275 (fixed some errors in index.js and parsePdf.js)
-}
-
-section {
-    margin: 20px;
-}
-
-button {
-  background: #2ecc71;
+#processButton, #checkSymptomsButton, #downloadDoctorPdf {
+  background: linear-gradient(to right, var(--secondary), var(--primary));
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 20px;
+  width: 100%;
+  transition: var(--transition);
+  letter-spacing: 0.5px;
 }
 
-button:hover {
-  background: #27ae60;
+#processButton:hover, #checkSymptomsButton:hover, #downloadDoctorPdf:hover {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.image-preview {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+#questionsList {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#questionsList li {
+  background: rgba(240, 128, 128, 0.08);
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--border-radius);
+  position: relative;
+  padding-left: 2rem;
+  border-left: 3px solid var(--primary);
+  text-align: left;
+}
+
+#symptomInput, #symptomExamples {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray);
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+.status {
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.status.info {
+  background-color: rgba(127, 179, 213, 0.15);
+  color: var(--secondary);
+  border-left: 3px solid var(--secondary);
+  text-align: left;
 }
 
 footer {
-  margin-top: 30px;
-  font-size: 0.9em;
-  color: #7f8c8d;
   text-align: center;
+  margin-top: 2rem;
+  color: var(--gray);
+  font-size: 0.9rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--terracotta-border);
 }
-<<<<<<< HEAD
-
-/* Styling for result sections */
-#results {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#results h2 {
-    color: #333;
-    font-size: 1.2em;
-    margin-bottom: 10px;
-}
-
-#results p, #results div, #results ul {
-    color: #555;
-    font-size: 1em;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-=======
->>>>>>> 2891275 (fixed some errors in index.js and parsePdf.js)
