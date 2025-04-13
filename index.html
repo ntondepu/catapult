@@ -1,62 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedAI Navigator</title>
-  <link rel="stylesheet" href="style.css" />
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>MedAI Navigator</title>
+ <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>MedAI Navigator</h1>
-      <p>Upload your medical report for a plain-English explanation</p>
-    </header>
+ <div class="container">
+   <header>
+     <h1>MedAI Navigator</h1>
+     <p>Upload your medical report for a plain-English explanation</p>
+   </header>
 
-    <main>
-      <!-- Upload Area -->
-      <div class="upload-area">
-        <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" />
-        <label for="fileInput">Choose a PDF or Image</label>
-        <p>Supports: PDF, JPG, PNG files</p>
-        <button id="processButton">Process File</button>
-      </div>
 
-      <!-- Display Image -->
-      <div id="imagePreview" class="image-preview"></div>
+   <main>
+     <!-- Upload Area -->
+     <div class="upload-area">
+       <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" />
+       <label for="fileInput">Choose a PDF or Image</label>
+       <p>Supports: PDF, JPG, PNG files</p>
+       <button id="processButton">Process File</button>
+     </div>
 
-      <!-- Extracted Text -->
-      <div id="results" class="results">
-        <h2>Extracted Text:</h2>
-        <p id="extractedText">No text extracted yet.</p>
-      </div>
 
-      <!-- Summary Section -->
-      <div class="summary-section">
-        <h2>Summary:</h2>
-        <p id="summary">No summary yet.</p>
-      </div>
+     <!-- Display Image -->
+     <div id="imagePreview" class="image-preview"></div>
 
-      <!-- Follow-up Questions -->
-      <div class="follow-up-section">
-        <h2>Follow-up Questions:</h2>
-        <ul id="questionsList">
-          <li>No questions generated yet.</li>
-        </ul>
-      </div>
-    </main>
 
-    <footer>
-      <p>
-        Note: This tool does not store your medical data. It is not a substitute
-        for professional medical advice.
-      </p>
-    </footer>
-  </div>
+     <!-- Extracted Text -->
+     <div id="results" class="results">
+       <h2>Extracted Text:</h2>
+       <p id="extractedText">No text extracted yet.</p>
+     </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script src="script.js"></script>
+
+     <!-- Summary Section -->
+     <div class="summary-section">
+       <h2>Summary:</h2>
+       <p id="summary">No summary yet.</p>
+     </div>
+
+
+     <!-- Follow-up Questions -->
+     <div class="follow-up-section">
+       <h2>Follow-up Questions:</h2>
+       <ul id="questionsList">
+         <li>No questions generated yet.</li>
+       </ul>
+     </div>
+   </main>
+
+
+   <footer>
+     <p>
+       Note: This tool does not store your medical data. It is not a substitute
+       for professional medical advice.
+     </p>
+   </footer>
+ </div>
+
+
+ <!-- Scripts -->
+ <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+ <script src="script.js"></script>
 </body>
 </html>
